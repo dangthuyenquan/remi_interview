@@ -1,12 +1,11 @@
 import { RouteObject } from 'react-router-dom'
 import { MainLayout } from './layouts/MainLayout'
-import {lazy} from 'react'
+import { lazy } from 'react'
 import { PATH } from './config/path'
 
 
 const Home = lazy(() => import('./pages'))
-const Health = lazy(() => import('./pages/health'))
-const MyRecord = lazy(() => import('./pages/my-record'))
+const Share = lazy(() => import('./pages/Share'))
 
 export const routers: RouteObject[] = [
     {
@@ -17,12 +16,8 @@ export const routers: RouteObject[] = [
                 index: true
             },
             {
-                element: <MyRecord />,
-                path: PATH.myRecord
-            },
-            {
-                element: <Health />,
-                path: PATH.health
+                element: <Share />,
+                path: PATH.share
             }
         ]
     }
