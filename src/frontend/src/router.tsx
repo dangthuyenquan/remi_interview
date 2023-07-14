@@ -2,6 +2,7 @@ import { RouteObject } from 'react-router-dom'
 import { MainLayout } from './layouts/MainLayout'
 import { lazy } from 'react'
 import { PATH } from './config/path'
+import { PrivateLayout } from './layouts/PrivateLayout'
 
 
 const Home = lazy(() => import('./pages'))
@@ -14,10 +15,15 @@ export const routers: RouteObject[] = [
             {
                 element: <Home />,
                 index: true
-            },
+            }
+        ]
+    },
+    {
+        element: <PrivateLayout />,
+        children: [
             {
                 element: <Share />,
-                path: PATH.share
+                path: PATH.share,
             }
         ]
     }
