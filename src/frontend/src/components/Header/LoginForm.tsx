@@ -65,7 +65,7 @@ function LoginForm() {
     }
 
     return (
-        <div className=" flex gap-5 items-center flex-1 justify-end">
+        <div className=" p-6 flex md:flex-row  items-end flex-col   gap-5  flex-1 justify-end">
             <div className="flex flex-col relative max-w-lg w-60">
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-700 ">
                     <input

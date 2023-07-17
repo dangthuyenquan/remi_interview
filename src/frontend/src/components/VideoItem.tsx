@@ -33,7 +33,7 @@ function VideoItem({ video }: { video: IVideo }) {
                 className='md:w-full xl:w-7/12'
             >
                 <h2 className='text-base font-semibold text-lg font-bold text-red-500'>{video.title}</h2>
-                <h3 className='mt-1 text-lg text-gray-900'>Shared by dangthuyenquan@gmail.com</h3>
+                <h3 className='mt-1 text-lg text-gray-900'>Shared by {video.shareBy.email}</h3>
                 <h4 className='mt-2 text-sm text-gray-900' >Description</h4>
                 <p className='text-md text-gray-600 line-clamp-6'>{video.description}</p>
             </div>
