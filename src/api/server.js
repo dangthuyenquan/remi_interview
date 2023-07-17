@@ -6,12 +6,15 @@ const cors = require('cors');
 const corsOptions = require('./config/corsOptions');
 const { logger } = require('./middleware/logEvents');
 const errorHandler = require('./middleware/errorHandler');
-const verifyJWT = require('./middleware/verifyJWT');
 const cookieParser = require('cookie-parser');
 const credentials = require('./middleware/credentials');
 const mongoose = require('mongoose');
 const connectDB = require('./config/dbConn');
 const PORT = process.env.PORT || 3500;
+const server = require('http').createServer(app);
+const socket = require('./socket');
+
+
 
 // Connect to MongoDB
 connectDB();
@@ -59,6 +62,9 @@ app.all('*', (req, res) => {
 });
 
 app.use(errorHandler);
+
+ //Initialize Socket.IO
+ socket.initialize(server);
 
 mongoose.connection.once('open', () => {
     console.log('Connected to MongoDB');

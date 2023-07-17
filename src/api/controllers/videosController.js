@@ -1,5 +1,6 @@
 const Video = require('../model/Video');
 const axios = require('axios');
+const socket = require('../socket');
 
 const getAllVideos = async (req, res) => {
 
@@ -21,8 +22,9 @@ const getAllVideos = async (req, res) => {
             // Query the paginated documents using skip() and limit() methods
             Video.find()
                 .skip(skipCount)
+                .populate('shareBy', '_id email')
                 .limit(pageSize)
-                .sort({'createdAt': -1})
+                .sort({ 'createdAt': -1 })
                 .exec((err, documents) => {
                     if (err) {
                         console.error(err);
@@ -52,19 +54,40 @@ const createNewVideo = async (req, res) => {
 
     try {
 
-
         const url = `https://www.googleapis.com/youtube/v3/videos?id=${req.body.videoYoutubeId}&key=AIzaSyBqg1hsHOtAcQTORDyxhvKrHaViJc9cFIw&part=snippet,contentDetails`;
         const response = await axios.get(url);
-
         if (response.data.items[0]) {
             const result = await Video.create({
-                user_id: '123',
+                shareBy: req.user_id,
                 description: response.data.items[0].snippet.description,
                 title: response.data.items[0].snippet.title,
                 videoYoutubeId: req.body.videoYoutubeId,
                 createdAt: Date.now(),
             });
-            res.status(201).json({ 'success': { 'message': 'Video shared successfully.' }, data: result });
+
+            const io = socket.getIO();
+
+            // Emit an event to all connected clients
+            io.emit('share-video-channel', {
+                video: {
+                    ...result._doc,
+                    shareBy: {
+                        _id: req.user_id,
+                        email: req.user,
+                    }
+                },
+
+            });
+
+            res.status(201).json({
+                'success': { 'message': 'Video shared successfully.' }, data: {
+                    ...result,
+                    shareBy: {
+                        _id: req.user_id,
+                        email: req.user,
+                    }
+                }
+            });
         } else {
             res.status(400).json({ 'error': { 'message': 'Youtube video not found' } });
         }
