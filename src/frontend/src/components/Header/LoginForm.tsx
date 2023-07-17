@@ -1,5 +1,6 @@
 import useInputValidator from '@/hooks/useInputValidator'
-import { login } from '@/stores/authReducer';
+import { loginRegister } from '@/services/accountService';
+import { login, updateAccessToken } from '@/stores/authReducer';
 import React from 'react'
 import { useDispatch } from 'react-redux';
 
@@ -39,7 +40,7 @@ function LoginForm() {
         },
     ]);
 
-    const handleOnSubmit = () => {
+    const handleOnSubmit = async () => {
 
         //merge input array to check
         const validateInput = [emailInput, passwordInput];
@@ -54,7 +55,11 @@ function LoginForm() {
 
         if (isVerified) {
 
-            dispatch(login({ email: emailInput.value as string }));
+            const accessToken = await loginRegister(emailInput.value as string, passwordInput.value as string);
+
+            if (accessToken) {
+                dispatch(updateAccessToken(accessToken));
+            }
 
         }
     }

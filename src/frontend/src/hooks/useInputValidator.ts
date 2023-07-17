@@ -25,7 +25,11 @@ const useInputValidator = (initialValue: TInputValue, validationRules:
         return true;
     };
 
-    return { value, error, handleChange, validate };
+    const clearValue = () => {
+        setValue('');
+    }
+
+    return { value, error, handleChange, validate, clearValue };
 };
 
 export default useInputValidator;

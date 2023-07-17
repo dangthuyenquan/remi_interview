@@ -1,7 +1,7 @@
-import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
+import createSagaMiddleware from "redux-saga";
 import { ENV } from "../config";
 import authReducer from "./authReducer";
-import createSagaMiddleware from "redux-saga";
 import sagaRoot from "./sagas";
 
 

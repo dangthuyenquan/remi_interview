@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom'
-import { useAuth } from '@/stores/authReducer';
+import { UserState, useAuth } from '@/stores/authReducer';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import React from 'react';
@@ -16,11 +16,15 @@ export const PrivateLayout: React.FC<PrivateLayoutProps> = () => {
 
     React.useEffect(() => {
 
-        if (!auth.isLogin()) {
+        if (!auth.isLogin() && auth.isVerified()) {
             enqueueSnackbar('You must be logged in to share a video.', { variant: 'warning' });
         }
 
-    }, []);
+    }, [auth]);
+
+    if (!auth.isVerified()) {
+        return null;
+    }
 
     if (!isLogin) {
         return <Navigate to='/' />

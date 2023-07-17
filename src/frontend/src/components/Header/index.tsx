@@ -18,6 +18,7 @@ export const Header: React.FC<HeaderProps> = () => {
     const auth = useAuth();
 
     const isLogin = auth.isLogin();
+    const isVerifyed = auth.isVerified();
 
     return (
         <div>
@@ -27,18 +28,18 @@ export const Header: React.FC<HeaderProps> = () => {
                 </Link>
 
                 {
-                    isLogin ?
-                        <UserInfo />
+                    isVerifyed ?
+                        isLogin ?
+                            <UserInfo />
+                            :
+                            <LoginForm />
                         :
-                        <LoginForm />
+                        <div className=" flex gap-5 items-center flex-1 justify-end">
+                            <p>Loading...</p>
+                        </div>
                 }
             </div>
             <hr className='mt-2' />
         </div>
     )
-}
-
-interface InputData {
-    value: string,
-    Validation: boolean
 }

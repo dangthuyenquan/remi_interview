@@ -1,3 +1,5 @@
+import { IUser } from "@/stores/authReducer"
+
 const TOKEN_KEY = 'token'
 const USER_KEY = 'user'
 export const setToken = (data: JSON) => {
@@ -14,8 +16,8 @@ export const clearToken = () => {
 export const setUser = (data: JSON) => {
     localStorage.setItem(USER_KEY, JSON.stringify(data))
 }
-export const getUser = () => {
-    return JSON.parse(localStorage.getItem(USER_KEY) || 'null') 
+export const getUser = (): IUser => {
+    return JSON.parse(localStorage.getItem(USER_KEY) || 'null')
 }
 export const clearUser = () => {
     localStorage.removeItem(USER_KEY)
