@@ -4,10 +4,10 @@ const jwt = require('jsonwebtoken');
 
 const handleNewUser = async (req, res) => {
     const { user, pwd } = req.body;
-    if (!user || !pwd) return res.status(400).json({ 'message': 'Username and password are required.' });
+    if (!user || !pwd) return res.status(400).json({ 'message': 'email and password are required.' });
 
-    // check for duplicate usernames in the db
-    let userData = await User.findOne({ username: user }).exec();
+    // check for duplicate emails in the db
+    let userData = await User.findOne({ email: user }).exec();
 
     if (!userData) {
         try {
@@ -15,7 +15,7 @@ const handleNewUser = async (req, res) => {
             const hashedPwd = await bcrypt.hash(pwd, 10);
             //store the new user
             userData = await User.create({
-                "username": user,
+                "email": user,
                 "password": hashedPwd
             });
         } catch (err) {
@@ -28,21 +28,19 @@ const handleNewUser = async (req, res) => {
 
         const match = await bcrypt.compare(pwd, userData.password);
         if (match) {
-            const roles = Object.values(userData.roles).filter(Boolean);
             // create JWTs
             const accessToken = jwt.sign(
                 {
                     "UserInfo": {
                         "_id": userData._id.toString(),
-                        "username": userData.username,
-                        "roles": roles
+                        "email": userData.email,
                     }
                 },
                 process.env.ACCESS_TOKEN_SECRET,
                 { expiresIn: '10s' }
             );
             const refreshToken = jwt.sign(
-                { "_id": userData._id, "username": userData.username },
+                { "_id": userData._id, "email": userData.email },
                 process.env.REFRESH_TOKEN_SECRET,
                 { expiresIn: '1d' }
             );
@@ -50,18 +48,17 @@ const handleNewUser = async (req, res) => {
             userData.refreshToken = refreshToken;
             const result = await userData.save();
             console.log(result);
-            console.log(roles);
 
             // Creates Secure Cookie with refresh token
             res.cookie('refresh_token', refreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
 
             // Send authorization roles and access token to user
-            res.json({ roles, accessToken });
+            res.json({ accessToken });
 
         } else {
             res.json({
                 'error': {
-                    'message': 'Incorrect username or password',
+                    'message': 'Incorrect email or password',
                 }
             });
             // res.sendStatus(403);

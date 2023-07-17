@@ -17,20 +17,18 @@ const handleRefreshToken = async (req, res) => {
             const foundUser = await User.findOne({ refreshToken }).exec();
             if (!foundUser) return res.sendStatus(403); //Forbidden 
 
-            const roles = Object.values(foundUser.roles);
             const accessToken = jwt.sign(
 
                 {
                     "UserInfo": {
                         "_id": decoded._id.toString(),
-                        "username": decoded.username,
-                        "roles": roles
+                        "email": decoded.email,
                     }
                 },
                 process.env.ACCESS_TOKEN_SECRET,
                 { expiresIn: '10s' }
             );
-            return res.json({ roles, accessToken })
+            return res.json({ accessToken })
         }
     );
 }

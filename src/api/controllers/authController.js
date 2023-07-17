@@ -7,9 +7,9 @@ const handleLogin = async (req, res) => {
     const cookies = req.cookies;
     console.log(cookies?.refresh_token);
 
-    if (!user || !pwd) return res.status(400).json({ 'message': 'Username and password are required.' });
+    if (!user || !pwd) return res.status(400).json({ 'message': 'Email and password are required.' });
 
-    const foundUser = await User.findOne({ username: user }).exec();
+    const foundUser = await User.findOne({ email: user }).exec();
     if (!foundUser) return res.sendStatus(403); //Unauthorized 
     // evaluate password 
     const match = await bcrypt.compare(pwd, foundUser.password);
@@ -19,7 +19,7 @@ const handleLogin = async (req, res) => {
         const accessToken = jwt.sign(
             {
                 "UserInfo": {
-                    "username": foundUser.username,
+                    "email": foundUser.email,
                     "roles": roles
                 }
             },
@@ -27,7 +27,7 @@ const handleLogin = async (req, res) => {
             { expiresIn: '10s' }
         );
         const refreshToken = jwt.sign(
-            { "_id": foundUser._id, "username": foundUser.username },
+            { "_id": foundUser._id, "email": foundUser.email },
             process.env.REFRESH_TOKEN_SECRET,
             { expiresIn: '1d' }
         );

@@ -14,9 +14,9 @@ const videoSchema = new Schema({
         type: String,
         required: true
     },
-    user_id: {
-        type: String,
-        required: true
+    shareBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     },
     createdAt: {
         type: Number,

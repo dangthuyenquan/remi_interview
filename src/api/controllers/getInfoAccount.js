@@ -20,7 +20,7 @@ const handleGetInfoAccount = async (req, res) => {
             if (userData) {
                 return res.json({
                     _id: userData._id.toString(),
-                    email: userData.username,
+                    email: userData.email,
                 });
             }
             return res.sendStatus(403);
