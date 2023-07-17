@@ -1,3 +1,4 @@
+import { IUser } from "@/stores/authReducer";
 import axios from "axios";
 
 const videoService = {
@@ -24,6 +25,7 @@ export interface IVideo {
     videoYoutubeId: string,
     title: string,
     description: string,
+    shareBy: IUser
 }
 
 export interface IResponseVideoAll {
