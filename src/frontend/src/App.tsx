@@ -2,7 +2,7 @@ import axios from 'axios'
 import { SnackbarProvider } from 'notistack'
 import { Suspense, startTransition, useEffect, useState } from 'react'
 import { useLocation, useRoutes } from 'react-router-dom'
-import { io } from 'socket.io-client'
+import socketIOClient from 'socket.io-client'
 import "./App.css"
 import { PageWraper } from './assets/style'
 import { API_URL, SOCKET_SHARE_VIDEO_APP_URL } from './config'
@@ -94,7 +94,7 @@ function App() {
 
     useEffect(() => {
         if (auth.isLogin()) {
-            const socket = io(SOCKET_SHARE_VIDEO_APP_URL);
+            const socket = socketIOClient(SOCKET_SHARE_VIDEO_APP_URL);
 
             // Receive a share-video-channel
             socket.on('share-video-channel', (msg: { video: IVideo }) => {
