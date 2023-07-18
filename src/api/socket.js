@@ -4,14 +4,11 @@ let io;
 
 module.exports = {
     initialize: (server) => {
-        io = new Server({
-            ...server,
+        io = new Server(server, {
             cors: {
                 origin: process.env.CLIENT_URL
             }
         });
-
-        io.listen(3501);
 
         io.on('connection', (socket) => {
             console.log('A user connected');

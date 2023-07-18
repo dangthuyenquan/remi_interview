@@ -1,6 +1,7 @@
 const Video = require('../model/Video');
 const axios = require('axios');
 const socket = require('../socket');
+const getVideoYoutubeDetail = require('../services/videoService');
 
 const getAllVideos = async (req, res) => {
 
@@ -54,17 +55,17 @@ const createNewVideo = async (req, res) => {
 
     try {
 
-        const url = `https://www.googleapis.com/youtube/v3/videos?id=${req.body.videoYoutubeId}&key=AIzaSyBqg1hsHOtAcQTORDyxhvKrHaViJc9cFIw&part=snippet,contentDetails`;
-        const response = await axios.get(url);
-        if (response.data.items[0]) {
+        const videoDetail = await getVideoYoutubeDetail(req.body.videoYoutubeId);
+
+        if (videoDetail) {
             const result = await Video.create({
                 shareBy: req.user_id,
-                description: response.data.items[0].snippet.description,
-                title: response.data.items[0].snippet.title,
+                description: videoDetail.snippet.description,
+                title: videoDetail.snippet.title,
                 videoYoutubeId: req.body.videoYoutubeId,
                 createdAt: Date.now(),
             });
-
+            
             const io = socket.getIO();
 
             // Emit an event to all connected clients
@@ -79,9 +80,9 @@ const createNewVideo = async (req, res) => {
 
             });
 
-            res.status(201).json({
+            return res.status(201).json({
                 'success': { 'message': 'Video shared successfully.' }, data: {
-                    ...result,
+                    ...result._doc,
                     shareBy: {
                         _id: req.user_id,
                         email: req.user,
@@ -89,54 +90,16 @@ const createNewVideo = async (req, res) => {
                 }
             });
         } else {
-            res.status(400).json({ 'error': { 'message': 'Youtube video not found' } });
+            return res.status(400).json({ 'error': { 'message': 'Youtube video not found' } });
         }
     } catch (err) {
         console.error(err);
     }
 
-}
-
-const updateVideo = async (req, res) => {
-    if (!req?.body?.id) {
-        return res.status(400).json({ 'error': { 'message': 'ID parameter is required.' } });
-    }
-
-    const video = await Video.findOne({ _id: req.body.id }).exec();
-    if (!video) {
-        return res.status(204).json({ 'error': { "message": `No video matches ID ${req.body.id}.` } });
-    }
-    if (req.body?.firstname) video.firstname = req.body.firstname;
-    if (req.body?.lastname) video.lastname = req.body.lastname;
-    const result = await video.save();
-    res.json(result);
-}
-
-const deleteVideo = async (req, res) => {
-    if (!req?.body?.id) return res.status(400).json({ 'error': { 'message': 'Video ID required.' } });
-
-    const video = await Video.findOne({ _id: req.body.id }).exec();
-    if (!video) {
-        return res.status(204).json({ 'error': { "message": `No video matches ID ${req.body.id}.` } });
-    }
-    const result = await video.deleteOne(); //{ _id: req.body.id }
-    res.json(result);
-}
-
-const getVideo = async (req, res) => {
-    if (!req?.params?.id) return res.status(400).json({ 'error': { 'message': 'Video ID required.' } });
-
-    const video = await Video.findOne({ _id: req.params.id }).exec();
-    if (!video) {
-        return res.status(204).json({ 'error': { "message": `No video matches ID ${req.params.id}.` } });
-    }
-    res.json(video);
+    return res.status(500).json({ 'error': { 'message': 'Server Error' } });
 }
 
 module.exports = {
     getAllVideos,
     createNewVideo,
-    updateVideo,
-    deleteVideo,
-    getVideo
 }
