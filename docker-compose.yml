@@ -1,0 +1,60 @@
+version: "3"
+
+networks:
+    remi:
+        driver: bridge
+        ipam:
+            driver: default
+
+services:
+    api:
+        container_name: api
+        restart: always
+        build:
+            context: .
+            dockerfile: ./docker/api/Dockerfile
+        ports:
+            - "3500:3500"
+        links:
+            - mongodb
+        depends_on:
+            - mongodb
+        environment:
+            WAIT_HOSTS: mongodb:27017
+            CLIENT_URL: http://localhost:3001
+        networks:
+            - remi
+    mongodb:
+        image: mongo:latest
+        container_name: database_mongodb
+        environment:
+            MONGO_INITDB_DATABASE: database_test
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: example
+        ports:
+            - "27017:27017"
+        volumes:
+            - "./src/database:/data/db"
+            - "./src/log:/var/log/mongodb"
+            - "./docker/mongodb/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo-js:ro"
+        command: [ "mongod", "--auth" ]
+        restart: always
+        networks:
+            - remi
+    client:
+        container_name: client
+        build:
+            context: .
+            dockerfile: ./docker/client/Dockerfile
+            args:
+                VITE_APP_API_URL: http://localhost:3500
+                VITE_SOCKET_SHARE_VIDEO_APP_URL: http://localhost:3500
+        ports:
+            - 3001:80
+        networks:
+            - remi
+        logging:
+            driver: "json-file"
+            options:
+                max-size: 10m
+                max-file: "3"
