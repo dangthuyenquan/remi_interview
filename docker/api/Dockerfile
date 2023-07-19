@@ -11,7 +11,7 @@ COPY ${CODE_DIR} /var/www/app
 
 COPY  ${CODE_DIR}/package*.json /var/www/app
 
-RUN  mv .env.example .env
+#RUN  mv .env.example .env
 
 RUN npm install
 

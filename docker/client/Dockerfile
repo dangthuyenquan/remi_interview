@@ -9,7 +9,7 @@ ARG VITE_SOCKET_SHARE_VIDEO_APP_URL
 WORKDIR /var/www/app
 COPY ${CODE_DIR} /var/www/app
 
-RUN  mv .env.example .env
+#RUN  mv .env.example .env
 
 # Installing libs and build
 # RUN mv -f package.json package.json
