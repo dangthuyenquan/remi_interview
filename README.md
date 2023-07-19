@@ -1,5 +1,4 @@
 # Remitano Interview
-## I. Run application with Docker on Local environment
 # I Introduction
 
 The project is the result of a recruitment interview conducted by Remitano company, aiming to assess candidates' technical skills, testing abilities, and more.
