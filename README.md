@@ -49,7 +49,7 @@ Step 2: After the containers have been started, please wait a few minutes for th
 Step 3: Access `http://localhost:3001/` to access the application.
 
 
-### Access application
+### 1. Access application
 
 (Default settings, which can be changed in the docker-compose file)
 
@@ -72,7 +72,7 @@ http://localhost:3001/
 ```
 
 
-### To run the test suite:
+### 2. To run the test suite:
 
 Step 1: Run the command `docker-compose up --build -d` to build the images and start the containers.
 
@@ -142,6 +142,10 @@ To build Docker in the project environment, create environment files such as `.e
 ### 4: I don't know the configuration of the .env file.
 
 Please refer to the .env.example files to understand the format and meaning of the environment variables.
+
+### 5:  I cannot run tests for the API program.
+
+Please refer to section V part 2 of this document.
 
 # IX. Directory structure
 ```
