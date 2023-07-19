@@ -119,7 +119,7 @@ docker-compose down
 
 # VIII Troubleshooting
 
-### 1: Cách lấy google api key
+### 1: How to obtain a Google API key.
 
 Step 1: Access `https://console.cloud.google.com/` and log in to your account.
 
@@ -131,6 +131,9 @@ Step 4: Click on the `Credentials` menu and create an API key to access the appl
 
 Step 5: Copy the API key and paste it into the application's env file (api).
 
+### 2: Unable to connect to the database
+
+Please check if you have created the env file (Section III, Step 2)
 
 # IX. Directory structure
 ```
