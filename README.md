@@ -118,7 +118,12 @@ docker-compose down
 
 # VIII Troubleshooting
 
-### 1: How to obtain a Google API key.
+### 1: I cannot run the application.
+
+Check if the containers are running, check the logs of the container, check the database connection.
+![Alt text](image.png)
+
+### 2: How to obtain a Google API key.
 
 Step 1: Access `https://console.cloud.google.com/` and log in to your account.
 
@@ -130,19 +135,19 @@ Step 4: Click on the `Credentials` menu and create an API key to access the appl
 
 Step 5: Copy the API key and paste it into the application's env file (api).
 
-### 2: Unable to connect to the database
+### 3: Unable to connect to the database
 
 Please check if you have created the env file (Section III, Step 2)
 
-### 3: I want to build Docker in a production environment.
+### 4: I want to build Docker in a production environment.
 
 To build Docker in the project environment, create environment files such as `.env.production, .env.test, and .env.dev.` Then import them into the docker-compose file and replace the environment variables of the applications.
 
-### 4: I don't know the configuration of the .env file.
+### 5: I don't know the configuration of the .env file.
 
 Please refer to the .env.example files to understand the format and meaning of the environment variables.
 
-### 5:  I cannot run tests for the API program.
+### 6:  I cannot run tests for the API program.
 
 Please refer to section V part 2 of this document.
 
@@ -192,3 +197,7 @@ src
         |--server.js
         |--socket.js
 ```
+
+# IX. Diagram
+
+![Alt text](diagram.png)
